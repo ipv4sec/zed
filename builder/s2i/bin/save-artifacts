@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+cd $GOPATH
+if [ -d pkg ]; then
+    chmod -R +w pkg
+    tar cf - pkg
+fi
+cd -
+

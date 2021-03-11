@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+if [[ "$1" == "-h" ]]; then
+	exec /usr/libexec/s2i/usage
+fi
+
+echo
+echo "---> Checking for cache..."
+if [ "$(ls /tmp/artifacts 2>/dev/null)" ]; then
+  pushd /tmp/artifacts >/dev/null
+  echo "-----> Pulling cache..."
+  if [ -d pkg ]; then
+    echo "Restoring cache ${GOPATH}/pkg/..."
+    mv pkg ${GOPATH}/pkg
+  fi
+  popd >/dev/null
+fi
+
+echo "---> Installing application source..."
+cp -Rf /tmp/src/. /var/zed/
+
+echo "---> Building application from source..."
+cd /var/zed/
+go build
